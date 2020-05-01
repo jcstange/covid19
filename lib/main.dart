@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 void main() => runApp(MyApp());
@@ -13,17 +12,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'COVID-19',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blueGrey,
-      ),
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          primaryColor: Colors.blueGrey[800]),
       home: MyHomePage(title: 'COVID-19 Updates'),
     );
   }
@@ -75,28 +73,198 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Container(
-        child: Column(children: <Widget>[
-          loading
-              ? Center(child: CircularProgressIndicator())
-              : GlobalItem(globalData),
-          loading
-              ? Center(child: CircularProgressIndicator())
-              : Expanded(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: countries.length,
-                      itemBuilder: (BuildContext context, int i) {
-                        return CountryItem(countries[i]);
-                      })),
-        ]),
-      ),
+      appBar: AppBar(title: Text(widget.title), actions: []),
+      body: Column(children: <Widget>[
+        loading
+            ? Center(child: CircularProgressIndicator())
+            : Container(child: GlobalItem(globalData)),
+        loading
+            ? Center(child: CircularProgressIndicator())
+            : Expanded(child: CountriesList(countries))
+      ]),
     );
   }
 }
+/*
+* Ui Elements
+* */
+
+class CountriesList extends StatelessWidget {
+  final List list;
+
+  CountriesList(this.list);
+
+  @override
+  build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: list.length,
+      itemBuilder: (BuildContext context, int i) {
+        return CountryItem(list[i]);
+      },
+    );
+  }
+}
+
+class DataItem extends StatelessWidget {
+  final String title;
+  final int data;
+  final int delta;
+
+  DataItem(this.title, this.data, this.delta);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+          Expanded(
+            flex: 40,
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 4),
+              child: Text(title,
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.grey[400])),
+            ),
+          ),
+          Expanded(
+            flex: 35,
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 4),
+                child: Text('$data',
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.green),
+                    textAlign: TextAlign.end)),
+          ),
+          Expanded(
+            flex: 25,
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 4),
+                child: Text('$delta',
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.red),
+                    textAlign: TextAlign.end)),
+          )
+        ]));
+  }
+}
+
+class GlobalItem extends StatelessWidget {
+  final Global globalData;
+
+  GlobalItem(this.globalData);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.all(15),
+        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.blueGrey[900],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Expanded(
+              flex: 55,
+              child: Container(
+                child: Center(
+                  child: Text('Global ',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.grey[400])),
+                ),
+              ),
+            ),
+            Expanded(
+                flex: 45,
+                child: Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        DataItem('Confirmed: ', globalData.totalConfirmed,
+                            globalData.newRecovered),
+                        DataItem('Deaths: ', globalData.totalDeaths,
+                            globalData.newDeaths),
+                        DataItem('Recovered: ', globalData.totalRecovered,
+                            globalData.newRecovered)
+                      ]),
+                ))
+          ],
+        ));
+  }
+}
+
+class CountryItem extends StatelessWidget {
+  final Country countryData;
+
+  CountryItem(this.countryData);
+
+  @override
+  Widget build(BuildContext context) {
+    return new GestureDetector(
+        onTap: () {
+          Scaffold.of(context).showSnackBar(
+              SnackBar(content: Text("Clicked on ${countryData.country}")));
+        },
+        child: Container(
+            padding: EdgeInsets.all(15),
+            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.blueGrey[900],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Expanded(
+                  flex: 55,
+                  child: Container(
+                    child: Center(
+                      child: Text('${countryData.country} ',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.grey[400])),
+                    ),
+                  ),
+                ),
+                Expanded(
+                    flex: 45,
+                    child: Container(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            DataItem('Confirmed: ', countryData.totalConfirmed,
+                                countryData.newConfirmed),
+                            DataItem('Deaths: ', countryData.totalDeaths,
+                                countryData.newDeaths),
+                            DataItem('Recovered: ', countryData.totalRecovered,
+                                countryData.newRecovered)
+                          ]),
+                    ))
+              ],
+            )));
+  }
+}
+
+/*
+* End Ui Elements
+* */
 
 /*
 * Data Elements
@@ -127,9 +295,13 @@ class CovidData {
       print("Country: ${country.country}");
       countriesList.add(country);
     }
-    //countriesList.sort((a,b) =>
-    //    (a.totalConfirmed-a.totalRecovered).compareTo(b.totalConfirmed-b.totalRecovered)
-    //);
+    countriesList.sort((a, b) => (b.totalConfirmed - b.totalRecovered)
+        .compareTo(a.totalConfirmed - a.totalRecovered));
+
+    countriesList = countriesList
+        .where((i) => i.totalConfirmed - i.totalRecovered > 10)
+        .toList();
+
     return CovidData(
         global: Global.fromJson(json['Global']),
         countries: countriesList,
@@ -206,120 +378,4 @@ class Country {
 
 /*
 * End Data Elements
-* */
-
-/*
-* Ui Elements
-* */
-class DataItem extends StatelessWidget {
-  final String title;
-  final int data;
-
-  DataItem(this.title, this.data);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        SizedBox(
-          width: 0.25 * MediaQuery.of(context).size.width,
-          child: Container(
-            color: Colors.blueGrey[200],
-            child: Text(title,
-                style: TextStyle(fontSize: 12, color: Colors.white)),
-          ),
-        ),
-        SizedBox(
-          width: 0.25 * MediaQuery.of(context).size.width,
-          child: Container(
-              color: Colors.blueGrey[200],
-              child: Text('$data',
-                  style: TextStyle(fontSize: 12, color: Colors.white),
-                  textAlign: TextAlign.end)),
-        )
-      ],
-    );
-  }
-}
-
-class GlobalItem extends StatelessWidget {
-  final Global globalData;
-
-  GlobalItem(this.globalData);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        SizedBox(
-          width: 0.5 * MediaQuery.of(context).size.width,
-          height: (84).toDouble(),
-          child: Container(
-            color: Colors.blueGrey[200],
-            child: Center(
-              child: Text('Global ',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.white)),
-            ),
-          ),
-        ),
-        Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              DataItem('New Confirmed: ', globalData.newConfirmed),
-              DataItem('Total Confirmed: ', globalData.totalConfirmed),
-              DataItem('New Deaths: ', globalData.newDeaths),
-              DataItem('Total Deaths: ', globalData.totalDeaths),
-              DataItem('New Recovered: ', globalData.newRecovered),
-              DataItem('Total Recovered: ', globalData.totalRecovered)
-            ]),
-      ],
-    );
-  }
-}
-
-class CountryItem extends StatelessWidget {
-  final Country countryData;
-
-  CountryItem(this.countryData);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        SizedBox(
-          width: 0.5 * MediaQuery.of(context).size.width,
-          height: (84).toDouble(),
-          child: Container(
-            color: Colors.blueGrey[200],
-            child: Center(
-              child: Text('${countryData.country} ',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.red[300])),
-            ),
-          ),
-        ),
-        Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              DataItem('New Confirmed: ', countryData.newConfirmed),
-              DataItem('Total Confirmed: ', countryData.totalConfirmed),
-              DataItem('New Deaths: ', countryData.newDeaths),
-              DataItem('Total Deaths: ', countryData.totalDeaths),
-              DataItem('New Recovered: ', countryData.newRecovered),
-              DataItem('Total Recovered: ', countryData.totalRecovered)
-            ]),
-      ],
-    );
-  }
-}
-
-/*
-* End Ui Elements
 * */
