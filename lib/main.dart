@@ -228,10 +228,10 @@ class CountryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new GestureDetector(
-        onTap: () {
-          Scaffold.of(context).showSnackBar(
-              SnackBar(content: Text("Clicked on ${countryData.country}")));
-        },
+//        onTap: () {
+//          Scaffold.of(context).showSnackBar(
+//              SnackBar(content: Text("Clicked on ${countryData.country}")));
+//        },
         child: Container(
             padding: EdgeInsets.all(15),
             margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
