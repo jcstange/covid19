@@ -54,6 +54,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    refreshData();
+  }
+
+  Future<void> refreshData() async {
     Http().fetchData().then((response) {
       setState(() {
         loading = true;
@@ -73,14 +77,23 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title), actions: []),
+      appBar: AppBar(title: Text(widget.title), actions: [
+        IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () => showSearch(context: context,delegate: DataSearch(countries)),
+        )
+      ]),
       body: Column(children: <Widget>[
         loading
             ? Center(child: CircularProgressIndicator())
             : Container(child: GlobalItem(globalData)),
         loading
             ? Center(child: CircularProgressIndicator())
-            : Expanded(child: CountriesList(countries))
+            : Expanded(child: RefreshIndicator(
+              child: CountriesList(countries),
+              onRefresh: () => refreshData()
+          )
+        )
       ]),
     );
   }
@@ -272,7 +285,6 @@ class CountryItem extends StatelessWidget {
 class Http {
   Future<CovidData> fetchData() async {
     final response = await http.get('https://api.covid19api.com/summary');
-    print('httpResponse: ${response.statusCode}');
     if (response.statusCode == 200) {
       return CovidData.fromJson(json.decode(response.body));
     } else {
@@ -292,7 +304,6 @@ class CovidData {
     List<Country> countriesList = [];
     for (Map i in json['Countries']) {
       Country country = Country.fromJson(i);
-      print("Country: ${country.country}");
       countriesList.add(country);
     }
     countriesList.sort((a, b) => (b.totalConfirmed - b.totalRecovered)
@@ -373,6 +384,43 @@ class Country {
         newRecovered: json['NewRecovered'],
         totalRecovered: json['TotalRecovered'],
         date: json['Date']);
+  }
+}
+
+class DataSearch extends SearchDelegate<String> {
+  final List<Country> countries;
+
+  DataSearch(this.countries);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [IconButton(icon: Icon(Icons.clear), onPressed: () => query = "",)];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context){
+    return IconButton(
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () => close(context, null)
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context){
+    return Center(
+      child: Text(query)
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestionList = query.isEmpty
+        ? countries
+        : countries.where((country) => country.country.toLowerCase().startsWith(query.toLowerCase())).toList();
+    return CountriesList(suggestionList);
   }
 }
 
