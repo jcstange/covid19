@@ -1,15 +1,12 @@
-# covid19
+# COVID-19 Updates
 
-A new Flutter application.
+This is a flutter app that provides information about the COVID-19 infection across the planet.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## The idea:
 
-A few resources to get you started if this is your first Flutter project:
+Learn flutter, have fun and help the humanity.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
