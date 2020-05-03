@@ -76,7 +76,7 @@ class _CountryPageState extends State<CountryPage> {
                       color: Colors.blueGrey[900],
                     ),
                   child: Center(child: Text(
-                      'Confirmed Cases - Solved Cases',
+                      'Active Cases of COVID-19',
                       style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
