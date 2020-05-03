@@ -57,7 +57,7 @@ class _CountryPageState extends State<CountryPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              CountryItem(widget.country),
+              CountryItem(widget.country, false),
               loading ? Center(child: CircularProgressIndicator())
                   : Expanded(
                   flex: 9,

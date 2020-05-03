@@ -15,7 +15,7 @@ class CountriesList extends StatelessWidget {
       shrinkWrap: true,
       itemCount: list.length,
       itemBuilder: (BuildContext context, int i) {
-        return CountryItem(list[i]);
+        return CountryItem(list[i], true);
       },
     );
   }
@@ -124,14 +124,14 @@ class GlobalItem extends StatelessWidget {
 
 class CountryItem extends StatelessWidget {
   final Country countryData;
-
-  CountryItem(this.countryData);
+  final bool isClickable;
+  CountryItem(this.countryData,this.isClickable);
 
   @override
   Widget build(BuildContext context) {
     return new GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) =>
+          if(isClickable) Navigator.push(context, MaterialPageRoute(builder: (context) =>
               CountryPage(country: countryData)
           ));
         },
