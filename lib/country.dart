@@ -37,7 +37,7 @@ class _CountryPageState extends State<CountryPage> {
 
   List<charts.Series<GraphData, DateTime>> createActiveChartData() {
     return [ charts.Series<GraphData, DateTime>(
-        id: 'confirmed',
+        id: 'active',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
         domainFn: (GraphData graphData, _) => DateTime.parse(graphData.date),
         measureFn: (GraphData graphData, _) =>
@@ -60,7 +60,7 @@ class _CountryPageState extends State<CountryPage> {
 
   List<charts.Series<GraphData, DateTime>> createDeathChartData() {
     return [ charts.Series<GraphData, DateTime>(
-        id: 'confirmed',
+        id: 'perished',
         colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
         domainFn: (GraphData graphData, _) => DateTime.parse(graphData.date),
         measureFn: (GraphData graphData, _) => graphData.deaths,
@@ -84,9 +84,9 @@ class _CountryPageState extends State<CountryPage> {
                   ? Expanded(child: Center(child: CircularProgressIndicator()))
                   : Expanded(child: Column(
                 children: <Widget>[
-                  TimeChart('Active Cases of COVID-19',createActiveChartData()),
-                  TimeChart('Confirmed Cases of COVID-19',createConfimedChartData()),
-                  TimeChart('Deaths by COVID-19',createDeathChartData()),
+                  TimeChart('Active Cases',createActiveChartData()),
+                  TimeChart('Confirmed Cases',createConfimedChartData()),
+                  TimeChart('Perished',createDeathChartData()),
                 ],
               ))
             ]

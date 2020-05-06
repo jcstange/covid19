@@ -1,4 +1,4 @@
-name: covid19
+name: notJustAFlu
 description: A new Flutter application.
 
 # The following defines the version and build number for your application.
@@ -33,8 +33,8 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path_ios: "assets/launcher/covid.png"
-  image_path_android: "assets/launcher/covid.png"
+  image_path_ios: "assets/launcher/mask.png"
+  image_path_android: "assets/launcher/mask.png"
 
 
 # For information on the generic Dart part of this file, see the
