@@ -31,6 +31,7 @@ jobs:
     - run: flutter build web --release
     - run: |
         cd build/web
+        git init
         git config --global user.email jcstange@gmail.com
         git config --global user.name jcstange
         git status
