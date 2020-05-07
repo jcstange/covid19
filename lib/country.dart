@@ -84,46 +84,13 @@ class _CountryPageState extends State<CountryPage> {
                   ? Expanded(child: Center(child: CircularProgressIndicator()))
                   : Expanded(child: Column(
                 children: <Widget>[
-                  TimeChart('Active Cases of COVID-19',createActiveChartData()),
-                  TimeChart('Confirmed Cases of COVID-19',createConfimedChartData()),
-                  TimeChart('Deaths by COVID-19',createDeathChartData()),
+                  TimeChart('Active Cases',createActiveChartData()),
+                  TimeChart('Confirmed Cases',createConfimedChartData()),
+                  TimeChart('Deaths',createDeathChartData()),
                 ],
               ))
             ]
         )
     );
-  }
-}
-
-class TimeChart extends StatelessWidget {
-  final String title;
-  final List<charts.Series<GraphData, DateTime>> data;
-
-  TimeChart(this.title, this.data);
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-        child: Column(
-        children: <Widget> [
-        Expanded(
-        flex: 75,
-        child: charts.TimeSeriesChart(data, animate: true)
-    ),  Expanded(flex: 25, child:Container(
-          padding: EdgeInsets.all(15),
-          margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-          decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.blueGrey[900],
-          ), child: Center(child: Text(
-            title,
-            style: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.w800,
-            color: Colors.grey[400]
-            )
-         ))
-     ))]
-    ));
   }
 }
