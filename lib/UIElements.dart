@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'country.dart';
 import 'data.dart';
 
@@ -47,7 +47,7 @@ class DataItem extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: 35,
+                flex: 30,
                 child: Container(
                     margin: EdgeInsets.symmetric(vertical: 4),
                     child: Text('$data',
@@ -58,7 +58,18 @@ class DataItem extends StatelessWidget {
                         textAlign: TextAlign.end)),
               ),
               Expanded(
-                flex: 25,
+                flex: 10,
+                child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 4),
+                    child: Text(' + ',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.grey[400]),
+                        textAlign: TextAlign.center)),
+              ),
+              Expanded(
+                flex: 20,
                 child: Container(
                     margin: EdgeInsets.symmetric(vertical: 4),
                     child: Text('$delta',
@@ -66,7 +77,7 @@ class DataItem extends StatelessWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w800,
                             color: Colors.red),
-                        textAlign: TextAlign.end)),
+                        textAlign: TextAlign.start)),
               )
             ]));
   }
@@ -175,5 +186,38 @@ class CountryItem extends StatelessWidget {
                     ))
               ],
             )));
+  }
+}
+
+
+class TimeChart extends StatelessWidget {
+  final String title;
+  final List<charts.Series<GraphData, DateTime>> data;
+
+  TimeChart(this.title, this.data);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: Column(
+            children: <Widget> [
+              Expanded(
+                  flex: 75,
+                  child: charts.TimeSeriesChart(data, animate: true)
+              ),  Expanded(flex: 25, child:Container(
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.blueGrey[900],
+                  ), child: Center(child: Text(
+                  title,
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.grey[400]
+                  )
+              ))
+              ))]
+        ));
   }
 }
